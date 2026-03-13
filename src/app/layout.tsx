@@ -12,6 +12,10 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://smartsuburbs.in",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({
