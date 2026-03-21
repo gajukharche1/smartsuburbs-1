@@ -14,12 +14,32 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: 'Home', href: '/' },
-    { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Directories', href: '#directories' },
-    { label: 'Compare Plans', href: '#compare' },
-    { label: 'Services', href: '#services' },
-    { label: 'Contact', href: '#contact' },
+    { 
+      label: 'Home', 
+      href: '/',
+      subLinks: [
+        { label: 'About Us', href: '/about-us' }
+      ]
+    },
+    {
+      label: 'Local Marketing',
+      href: '#',
+      subLinks: [
+        { label: 'Paid Listing', href: 'https://sspaidlisting.smartsuburbs.in/' },
+        { label: 'Join Residents Portal', href: 'https://residents.smartsuburbs.in/' },
+        { label: 'Featured Articles', href: 'https://bizportal.smartsuburbs.in/' }
+      ]
+    },
+    {
+      label: 'Lead Generation',
+      href: '#',
+      subLinks: [
+        { label: 'Lead Generation', href: '/lead-generation-services-agency-pune-mumbai' },
+        { label: 'Facebook Ads Management', href: '/facebook-ads-management-packages' },
+        { label: 'Google Ad Packages', href: '/google-ad-packages' }
+      ]
+    },
+    { label: 'Contact', href: '/contact_us' },
   ];
 
   return (
@@ -61,7 +81,7 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <ul style={{ display: 'flex', alignItems: 'center', gap: '4px', listStyle: 'none', margin: 0, padding: 0 }} className="hidden-mobile">
           {navLinks.map(link => (
-            <li key={link.label}>
+            <li key={link.label} style={{ position: 'relative' }} className="nav-item">
               <a
                 href={link.href}
                 style={{
@@ -72,19 +92,32 @@ export default function Navbar() {
                   padding: '8px 14px',
                   borderRadius: '8px',
                   transition: 'all 0.2s',
-                  display: 'block',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
                 }}
                 onMouseEnter={e => {
-                  (e.target as HTMLElement).style.color = '#FF6B00';
-                  (e.target as HTMLElement).style.background = 'rgba(255,107,0,0.1)';
+                  (e.currentTarget as HTMLElement).style.color = '#FF6B00';
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,107,0,0.1)';
                 }}
                 onMouseLeave={e => {
-                  (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.8)';
-                  (e.target as HTMLElement).style.background = 'transparent';
+                  (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.8)';
+                  (e.currentTarget as HTMLElement).style.background = 'transparent';
                 }}
               >
-                {link.label}
+                {link.label} {link.subLinks && <span style={{ fontSize: '10px' }}>▼</span>}
               </a>
+              {link.subLinks && (
+                <ul className="dropdown-menu">
+                  {link.subLinks.map(subLink => (
+                    <li key={subLink.label}>
+                      <a href={subLink.href} className="dropdown-item">
+                        {subLink.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
@@ -122,22 +155,44 @@ export default function Navbar() {
           borderTop: '1px solid rgba(255,255,255,0.08)',
         }}>
           {navLinks.map(link => (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              style={{
-                display: 'block',
-                color: 'rgba(255,255,255,0.8)',
-                fontSize: '16px',
-                fontWeight: 500,
-                padding: '14px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
-                textDecoration: 'none',
-              }}
-            >
-              {link.label}
-            </a>
+            <div key={link.label}>
+              <a
+                href={link.href}
+                onClick={() => !link.subLinks && setMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  color: 'rgba(255,255,255,0.8)',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  padding: '14px 0',
+                  borderBottom: link.subLinks ? 'none' : '1px solid rgba(255,255,255,0.06)',
+                  textDecoration: 'none',
+                }}
+              >
+                {link.label}
+              </a>
+              {link.subLinks && (
+                <div style={{ paddingLeft: '16px', display: 'flex', flexDirection: 'column', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px' }}>
+                  {link.subLinks.map(subLink => (
+                    <a
+                      key={subLink.label}
+                      href={subLink.href}
+                      onClick={() => setMenuOpen(false)}
+                      style={{
+                         color: 'rgba(255,255,255,0.6)',
+                         fontSize: '15px',
+                         padding: '10px 0',
+                         textDecoration: 'none',
+                      }}
+                    >
+                      {subLink.label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
           <a href="https://sspaidlisting.smartsuburbs.in/" className="btn-primary" style={{ marginTop: '20px', width: '100%', justifyContent: 'center' }}>
             Get Listed Now
@@ -146,6 +201,44 @@ export default function Navbar() {
       )}
 
       <style>{`
+        .nav-item:hover .dropdown-menu {
+          display: block;
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+        .dropdown-menu {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          background: rgba(12,12,30,0.98);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 12px;
+          padding: 8px 0;
+          min-width: 180px;
+          list-style: none;
+          margin: 0;
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(10px);
+          transition: all 0.2s ease;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .dropdown-item {
+          color: rgba(255,255,255,0.8);
+          text-decoration: none;
+          font-size: 14px;
+          font-weight: 500;
+          padding: 10px 20px;
+          display: block;
+          transition: all 0.2s;
+        }
+        .dropdown-item:hover {
+          color: #FF6B00;
+          background: rgba(255,107,0,0.1);
+        }
+
         @media (max-width: 900px) {
           .hidden-mobile { display: none !important; }
           .mobile-right { display: flex !important; }
