@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { AuthProvider } from "@/context/AuthContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,18 +31,20 @@ export default function RootLayout({
         {/* Inline script: sets theme BEFORE paint to avoid flash */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `
+             __html: `
               try {
                 var t = localStorage.getItem('ss-theme');
                 if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                 document.documentElement.setAttribute('data-theme', t);
               } catch(e) {}
-            `,
+             `,
           }}
         />
       </head>
       <body suppressHydrationWarning>
-        <ThemeProvider>{children}</ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
